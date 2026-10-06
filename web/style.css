@@ -77,6 +77,13 @@ button {
   display: flex;
   flex-direction: column;
   z-index: 10;
+  /* Short windows: the sidebar compacts below (max-height queries) and scrolls as a last resort. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.sidebar > * {
+  flex-shrink: 0;
 }
 .brand {
   display: flex;
@@ -1215,6 +1222,63 @@ td small {
     font-size: 9px;
   }
 }
+/* Height-based sidebar compaction for laptops and short browser windows (full sidebar only). */
+@media (min-width: 901px) and (max-height: 860px) {
+  .sidebar {
+    padding-top: 22px;
+    padding-bottom: 14px;
+  }
+  .brand {
+    margin-bottom: 26px;
+  }
+  .sidebar-project {
+    margin-top: 22px;
+    padding-top: 18px;
+  }
+  .sidebar-project p {
+    margin: 8px 0;
+  }
+  .sidebar-project .text-button {
+    margin-top: 12px;
+  }
+  /* The award keeps its auto top margin (pinned low); this guarantees a gap when space runs out. */
+  .sidebar-project {
+    margin-bottom: 18px;
+  }
+  .award {
+    margin-bottom: 12px;
+  }
+  .settings {
+    margin-bottom: 8px;
+  }
+  .profile {
+    padding-top: 12px;
+  }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  /* The project blurb repeats the "engineering story" card, so it goes first. */
+  .sidebar-project {
+    display: none;
+  }
+  .sidebar nav {
+    margin-bottom: 18px;
+  }
+}
+@media (min-width: 901px) and (max-height: 540px) {
+  .workspace-label,
+  .award {
+    display: none;
+  }
+  .brand {
+    margin-bottom: 16px;
+  }
+  .sidebar nav {
+    gap: 2px;
+  }
+  .settings {
+    margin-top: auto;
+  }
+}
 @media (max-width: 1150px) {
   .sidebar {
     width: 205px;
@@ -1389,9 +1453,12 @@ td small {
   .research-label {
     font-size: 8px;
   }
-  .topbar .avatar,
-  .topbar .icon-button {
+  /* Keep the settings button: it is the only way to configure Device mode on a phone. */
+  .topbar .avatar {
     display: none;
+  }
+  .topbar .icon-button {
+    padding: 5px;
   }
   .topbar .top-right {
     gap: 5px;
