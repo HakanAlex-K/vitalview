@@ -1,0 +1,31 @@
+{
+  "date": "2026-09-21",
+  "result": "passed",
+  "method": "React DOM (jsdom) using real HTTP Node backend, real Python model worker, and simulated ESP32 /data endpoint",
+  "checks": [
+    "ESP32-shaped vitals -> backend -> React",
+    "300 real dataset sample pairs -> Python inference -> React",
+    "Legacy ESP32 response key matches dashboard estimate",
+    "Backend report model ID matches inference",
+    "Freshness expiration removes estimate",
+    "Rejected sample removes previous estimate",
+    "Backend disconnect clears live readings",
+    "Authenticated ESP32 /data polling preserves experimental oxygen flag (mock board)"
+  ],
+  "physical_hardware_tested": false,
+  "visual_browser_tested": false,
+  "firmware_compile": {
+    "result": "passed",
+    "target": "Espressif ESP32 Dev Module (esp32dev)",
+    "platform": "espressif32 6.10.0",
+    "ram_bytes": 49496,
+    "ram_percent": 15.1,
+    "flash_bytes": 861297,
+    "flash_percent": 65.7,
+    "note": "Credential-free compile; physical board and sensors were not available."
+  },
+  "automated_suite": {
+    "node_api_and_react_tests": 14,
+    "python_tests": 5
+  }
+}

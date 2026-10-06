@@ -1,0 +1,33 @@
+{
+  "name": "vitalview-research",
+  "version": "2.2.0",
+  "private": true,
+  "description": "Optical sensing research dashboard and reproducible neural network",
+  "type": "module",
+  "scripts": {
+    "check:publish": "node scripts/check-publication.js",
+    "format": "prettier --write \"*.{js,json,md}\" server scripts tests web docs firmware/README.md .github/workflows .prettierrc.json",
+    "format:check": "prettier --check \"*.{js,json,md}\" server scripts tests web docs firmware/README.md .github/workflows .prettierrc.json",
+    "format:python": "python -m black ml tests/test_pipeline.py",
+    "format:python:check": "python -m black --check ml tests/test_pipeline.py",
+    "dev": "vite --host 127.0.0.1",
+    "build": "node scripts/sync-benchmark.js && vite build",
+    "start": "node --env-file-if-exists=.env server.js",
+    "test": "npm run build && node --test tests/*.test.js && python -m unittest discover -s tests -p \"test_*.py\"",
+    "demo:device": "node scripts/device-simulator.js",
+    "demo:portable": "npm run build && node scripts/standalone.js"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.0",
+    "prettier": "^3.9.9",
+    "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  }
+}

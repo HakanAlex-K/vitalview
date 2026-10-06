@@ -1,0 +1,10 @@
+{
+  "source": "Experiment notes, 2026-09-21",
+  "sample_type": "Petri-dish glucose solutions",
+  "additive": "Xanthan gum",
+  "additive_purpose": "Intended to approximate blood viscosity",
+  "human_measurements": false,
+  "concentration_units": "Unconfirmed; source column is named glucose_mg_dl",
+  "gum_concentration": "Unconfirmed; equality across dishes unconfirmed",
+  "independent_preparations": "Unconfirmed"
+}
