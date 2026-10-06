@@ -11,3 +11,6 @@
 *.h text eol=lf
 *.png binary
 .githooks/* text eol=lf
+
+# Built by `npm run demo:portable`; keep it out of GitHub language statistics.
+VitalView-Demo.html linguist-generated=true
