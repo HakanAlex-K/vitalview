@@ -3,7 +3,7 @@
 **An optical sensing system that goes from an ESP32 to a neural network to a live dashboard.**
 First place, Drexel Freshman Design.
 
-<!-- After the first GitHub Pages deploy, add: **[Live demo](https://<username>.github.io/<repo>/)** -->
+**[Live demo](https://hakanalex-k.github.io/vitalview/)** (synthetic data, runs in the browser)
 
 ![VitalView dashboard in demo mode](docs/images/dashboard.png)
 
