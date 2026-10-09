@@ -1,10 +1,11 @@
 import React from 'react';
-import { Download } from 'lucide-react';
+import { Download, TriangleAlert } from 'lucide-react';
 import { StatusBadge } from './Badge.jsx';
+import { ChannelStats } from './ChannelStats.jsx';
 import { Modal } from './Modal.jsx';
 import { SignalPlot } from './SignalPlot.jsx';
 import { download } from '../lib/download.js';
-import { formatTime, formatValue, statusLabel } from '../lib/format.js';
+import { formatTime, formatValue, sourceLabel, statusLabel } from '../lib/format.js';
 
 export function CaptureDialog({ capture, onClose }) {
   const synthetic = capture.source === 'synthetic';
@@ -17,20 +18,30 @@ export function CaptureDialog({ capture, onClose }) {
       closeLabel="Close capture"
       onClose={onClose}
     >
-      <StatusBadge status={capture.status}>{statusLabel(capture.status)}</StatusBadge>
-      <h2 id="capture-title">Capture details</h2>
-      <p>
-        {formatTime(capture.receivedAt)} · {capture.source}
-      </p>
+      <div className="modal-head">
+        <StatusBadge status={capture.status}>{statusLabel(capture.status)}</StatusBadge>
+        <h2 id="capture-title">Capture details</h2>
+        <p>
+          {formatTime(capture.receivedAt)} · {sourceLabel(capture.source)} ·{' '}
+          <code>{capture.id.slice(0, 8)}</code>
+        </p>
+      </div>
       <div className="detail-value">
-        {formatValue(capture.estimate)}
+        <span>{formatValue(capture.estimate)}</span>
         <small>label units · {synthetic ? 'synthetic' : 'experimental'}</small>
       </div>
+      {reason && (
+        <div className="inline-error">
+          <TriangleAlert size={15} />
+          <span>{reason}</span>
+        </div>
+      )}
       {capture.samples ? (
         <>
-          <SignalPlot samples={capture.samples} />
+          <SignalPlot samples={capture.samples} compact />
+          <ChannelStats samples={capture.samples} />
           <button
-            className="secondary"
+            className="btn secondary wide"
             onClick={() =>
               download(
                 'vitalview-optical-capture.csv',
@@ -43,12 +54,11 @@ export function CaptureDialog({ capture, onClose }) {
           </button>
         </>
       ) : (
-        <p className="microcopy">
+        <p className="microcopy boxed">
           Older capture waveforms are not retained by the server. This log keeps only result
           metadata.
         </p>
       )}
-      {reason && <div className="inline-error">{reason}</div>}
       <p className="microcopy">
         {synthetic
           ? 'Generated demonstration data.'

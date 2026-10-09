@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Settings2 } from 'lucide-react';
+import { ArrowRight, Lock, Settings2 } from 'lucide-react';
 import { Modal } from './Modal.jsx';
 
 const isHttpUrl = (value) => {
@@ -25,14 +25,18 @@ export function SettingsDialog({ api, token, onSave, onInvalid, onClose }) {
 
   return (
     <Modal labelledBy="settings-title" closeLabel="Close settings" onClose={onClose}>
-      <Settings2 size={25} />
-      <h2 id="settings-title">Connect your workspace</h2>
-      <p>
-        Run the included Node server locally. Use the same origin, or enter the address of your own
-        backend.
-      </p>
-      <label>
-        API base URL
+      <div className="modal-head">
+        <span className="modal-icon">
+          <Settings2 size={20} />
+        </span>
+        <h2 id="settings-title">Connect your workspace</h2>
+        <p>
+          Run the included Node server locally. Use the same origin, or enter the address of your
+          own backend.
+        </p>
+      </div>
+      <label className="field">
+        <span>API base URL</span>
         <input
           autoFocus
           value={draftApi}
@@ -40,8 +44,8 @@ export function SettingsDialog({ api, token, onSave, onInvalid, onClose }) {
           placeholder="Same origin (recommended)"
         />
       </label>
-      <label>
-        API token
+      <label className="field">
+        <span>API token</span>
         <input
           type="password"
           value={draftToken}
@@ -50,11 +54,12 @@ export function SettingsDialog({ api, token, onSave, onInvalid, onClose }) {
           autoComplete="off"
         />
       </label>
-      <p className="microcopy">
+      <p className="microcopy boxed">
+        <Lock size={13} />
         The token stays in memory and is cleared on reload. Device IP is configured on the server
         with ESP32_URL.
       </p>
-      <button className="primary wide" onClick={save}>
+      <button className="btn primary wide" onClick={save}>
         Save & connect <ArrowRight size={16} />
       </button>
     </Modal>

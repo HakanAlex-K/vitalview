@@ -5,22 +5,22 @@ export const PAGES = [
     key: 'overview',
     label: 'Overview',
     Icon: Activity,
-    title: 'Signals into insight.',
-    subtitle: 'A closer look at the connection between hardware, data, and machine learning.',
+    title: 'Live overview',
+    subtitle: 'The optical waveform, device vitals, and the latest experimental estimate.',
   },
   {
     key: 'sessions',
     label: 'Sessions',
     Icon: History,
-    title: 'Every capture, in context.',
-    subtitle: 'Review this session’s captures, inspect quality, and take your data with you.',
+    title: 'Capture sessions',
+    subtitle: 'Every capture in this session: its quality checks, result, and raw data.',
   },
   {
     key: 'model',
     label: 'Model & evidence',
     Icon: Layers,
-    title: 'A model you can inspect.',
-    subtitle: 'Reproducible training. Transparent evaluation. Clear limits.',
+    title: 'Model & evidence',
+    subtitle: 'How the network was trained and evaluated, and what the results do and don’t show.',
   },
 ];
 

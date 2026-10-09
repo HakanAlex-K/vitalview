@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, FlaskConical } from 'lucide-react';
+import { Check, FlaskConical, TriangleAlert } from 'lucide-react';
 import benchmark from './benchmark.json';
 import { CaptureDialog } from './components/CaptureDialog.jsx';
 import { ConnectionNotice, PageHeader } from './components/PageHeader.jsx';
@@ -7,6 +7,7 @@ import { SettingsDialog } from './components/SettingsDialog.jsx';
 import { Sidebar } from './components/Sidebar.jsx';
 import { Topbar } from './components/Topbar.jsx';
 import { useDialogFocusTrap } from './hooks/useDialogFocusTrap.js';
+import { useTheme } from './hooks/useTheme.js';
 import { DEMO_ESTIMATE, syntheticWave } from './lib/demo.js';
 import { download } from './lib/download.js';
 import { pageInfo } from './lib/pages.js';
@@ -65,6 +66,7 @@ export function App() {
   const [connection, setConnection] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [connectionEpoch, setConnectionEpoch] = useState(0);
+  const [theme, toggleTheme] = useTheme();
 
   const fileRef = useRef();
   const demoTimer = useRef(null);
@@ -77,6 +79,8 @@ export function App() {
 
   const demo = mode === 'demo';
   const report = demo ? benchmark : liveReport;
+  // The trained concentration levels; the bundled report stands in until the live one loads.
+  const labelLevels = Object.keys((report ?? benchmark).labels).map(Number);
 
   const request = async (path, options = {}) => {
     const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
@@ -309,7 +313,13 @@ export function App() {
         onOpenSettings={openSettings}
       />
       <main>
-        <Topbar pageLabel={current.label} onOpenSettings={openSettings} />
+        <Topbar
+          pageLabel={current.label}
+          status={{ demo, online, processing }}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onOpenSettings={openSettings}
+        />
         <div className="content">
           <PageHeader
             title={current.title}
@@ -326,54 +336,62 @@ export function App() {
           />
           {error && (
             <div className="error" role="alert">
-              {error}
+              <TriangleAlert size={16} />
+              <span>{error}</span>
             </div>
           )}
-          {page === 'overview' && (
-            <OverviewPage
-              demo={demo}
-              online={online}
-              capture={capture}
-              device={device}
-              sessions={sessions}
-              scenario={scenario}
-              onScenarioChange={(value) => {
-                setScenario(value);
-                setCapture(null);
-              }}
-              channel={channel}
-              onChannelChange={setChannel}
-              demoRun={{ running, progress, onToggle: toggleDemoCapture }}
-              live={{ importing, processing, connection, onImport: () => fileRef.current.click() }}
-              onSelect={selectCapture}
-              onNavigate={setPage}
-            />
-          )}
-          {page === 'sessions' && (
-            <SessionsPage
-              demo={demo}
-              sessions={sessions}
-              filter={filter}
-              onFilterChange={setFilter}
-              onExport={exportSession}
-              onClearDemo={() => {
-                setSessions([]);
-                setCapture(null);
-                setToast('Demo session cleared');
-              }}
-              onSelect={selectCapture}
-              onNavigate={setPage}
-            />
-          )}
-          {page === 'model' && <ModelPage report={report} />}
+          <div className="page" key={page}>
+            {page === 'overview' && (
+              <OverviewPage
+                demo={demo}
+                online={online}
+                capture={capture}
+                device={device}
+                sessions={sessions}
+                report={report}
+                labelLevels={labelLevels}
+                scenario={scenario}
+                onScenarioChange={(value) => {
+                  setScenario(value);
+                  setCapture(null);
+                }}
+                channel={channel}
+                onChannelChange={setChannel}
+                demoRun={{ running, progress, onToggle: toggleDemoCapture }}
+                live={{
+                  importing,
+                  processing,
+                  connection,
+                  onImport: () => fileRef.current.click(),
+                }}
+                onSelect={selectCapture}
+                onNavigate={setPage}
+              />
+            )}
+            {page === 'sessions' && (
+              <SessionsPage
+                demo={demo}
+                sessions={sessions}
+                filter={filter}
+                onFilterChange={setFilter}
+                onExport={exportSession}
+                onClearDemo={() => {
+                  setSessions([]);
+                  setCapture(null);
+                  setToast('Demo session cleared');
+                }}
+                onSelect={selectCapture}
+                onNavigate={setPage}
+              />
+            )}
+            {page === 'model' && <ModelPage report={report} />}
+          </div>
           <footer>
             <span>
               <FlaskConical size={13} />
               Research only. Not for diagnosis or treatment.
             </span>
-            <span>
-              VITALVIEW / V2 <span className="footer-dot">·</span> DESIGNED TO BE UNDERSTOOD
-            </span>
+            <span>VitalView v2 · ESP32 → Node → MLP → React</span>
           </footer>
         </div>
       </main>
@@ -396,7 +414,9 @@ export function App() {
       {selected && <CaptureDialog capture={selected} onClose={() => setSelected(null)} />}
       {toast && (
         <div className="toast" role="status">
-          <Check size={16} />
+          <span className="toast-icon">
+            <Check size={14} strokeWidth={3} />
+          </span>
           {toast}
         </div>
       )}
